@@ -12,18 +12,34 @@ import java.util.LinkedList;
 class DrawingView extends View {
 public DrawingView(Context ctx)  {
 super(ctx);
- 
+ setLayerType(View.LAYER_TYPE_HARDWARE,null);
 }
 boolean start=false;
 	private float strokeWidth=5;
 	private int pcolor=Color.BLACK;
 	private float xx=0;
+	public enum STYLE {
+	FILL,
+	FILL_AND_STROKE,
+	STROKE
+	}
+	private Paint.Style style=Paint.Style.STROKE;
+	public void setStyle(STYLE s){
+	if(s==STYLE.STROKE){
+	style = Paint.Style.STROKE;
+	} else if(s==STYLE.FILL){
+	style = Paint.Style.FILL;
+	} else if(s==STYLE.FILL_AND_STROKE){
+	style = Paint.Style.FILL_AND_STROKE;
+	}
+	}
 	public enum TYPES {
 		PEN,
 		CIRCLE,
 		SQUARE,
 		TRIANGLE1,
-		TRIANGLE2
+		TRIANGLE2,
+		LINE
 	}
 	private TYPES TYPE;
 	private float yy=0;
@@ -124,16 +140,18 @@ public void setDrawType(TYPES x){
 			rz.clear();
 			mPaint = new Paint();
 			mPaint.setStrokeWidth(strokeWidth);
+			mPaint.setAntiAlias(true);
+			mPaint.setStyle(style);
+if(eraser){
+	mPaint.setColor(Color.parseColor("#f4f4f4"));
+	mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+	//mPaint.setAlpha(0x00);
+	mPaint.setMaskFilter(null);
+} else {
 mPaint.setColor(pcolor);
 mPaint.setStrokeCap(Paint.Cap.ROUND);
 mPaint.setStrokeJoin(Paint.Join.ROUND);
-mPaint.setStyle(Paint.Style.STROKE);
 mPaint.setDither(true);
-mPaint.setAntiAlias(true);
-if(eraser){
-	mPaint.setColor(Color.TRANSPARENT); 
-	mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR)); 
-} else {
 	mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
 }
 path.moveTo(event.getX(),event.getY());
@@ -183,15 +201,15 @@ path.moveTo(event.getX(),event.getY());
 			float dx=Math.abs(xx-cx);
 			if(cx>xx){
 			path.moveTo(xx,yy);
-			path.lineTo(cx,cy);
-			path.lineTo(xx-dx,cy);
+			path.lineTo(cx,yy);
+			path.lineTo(xx+(dx/2),cy);
 			path.lineTo(xx,yy);
 			} else {
 			path.moveTo(xx,yy);
-			path.lineTo(cx,cy);
-			path.lineTo(xx+dx,cy);
+			path.lineTo(cx,yy);
+			path.lineTo(xx-(dx/2),cy);
 			path.lineTo(xx,yy);
-			}
+			}//end sq1
 			} else {
 			if(TYPE==TYPES.TRIANGLE2){
 			path.reset();
@@ -199,7 +217,13 @@ path.moveTo(event.getX(),event.getY());
 			path.lineTo(xx,cy);
 			path.lineTo(cx,cy);
 			path.lineTo(xx,yy);
-			}//triangle2 end
+			} else {
+			if(TYPE==TYPES.LINE){
+			path.reset();
+			path.moveTo(xx,yy);
+			path.lineTo(cx,cy);
+			}
+			}//end last
 			}
 			}
 			}//end sq
