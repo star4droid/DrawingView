@@ -32,4 +32,5 @@ set Drawing Type
 DrawingV.setDrawType(DrawingView.TYPES.SQUARE);
 //Types:- SQUARE/PEN/CIRCLE/TRIANGLE1/TRIANGLE2
 ```
+#ScreenShot
 <img src="images/img1.jpg"></img>
