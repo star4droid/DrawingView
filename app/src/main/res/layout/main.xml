@@ -9,6 +9,7 @@
 		android:id="@+id/linear1"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
+		android:background="#333B4E"
 		android:orientation="vertical">
 		<LinearLayout
 			android:id="@+id/linear3"
@@ -85,6 +86,31 @@
 				android:textStyle="bold"
 				android:textColor="#000000"
 				android:layout_weight="1" />
+		</LinearLayout>
+		<LinearLayout
+			android:id="@+id/linear4"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal">
+			<CheckBox
+				android:id="@+id/fill"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="8dp"
+				android:text="Fill"
+				android:textSize="12sp"
+				android:textStyle="bold"
+				android:textColor="#FFFFFF" />
+			<CheckBox
+				android:id="@+id/stroke"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="8dp"
+				android:text="stroke"
+				android:textSize="12sp"
+				android:textStyle="bold"
+				android:textColor="#FFFFFF"
+				android:checked="true" />
 		</LinearLayout>
 	</LinearLayout>
 </LinearLayout>
