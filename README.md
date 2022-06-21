@@ -1,4 +1,4 @@
-q# DrawingView
+# DrawingView
 simple drawing view with ability to draw shapes and customize the view
 change between Eraser/Pen Mode
 ```
