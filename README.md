@@ -1,4 +1,4 @@
-# DrawingView
+q# DrawingView
 simple drawing view with ability to draw shapes and customize the view
 change between Eraser/Pen Mode
 ```
@@ -30,7 +30,7 @@ DrawingV.setPenSize(getPenSize()+1);
 set Drawing Type 
 ```
 DrawingV.setDrawType(DrawingView.TYPES.SQUARE);
-//Types:- SQUARE/PEN/CIRCLE/TRIANGLE1/TRIANGLE2
+//Types:- SQUARE/PEN/LINE/CIRCLE/TRIANGLE1/TRIANGLE2
 ```
 # ScreenShot
 <img src="images/img1.jpg"></img>
