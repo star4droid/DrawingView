@@ -29,8 +29,10 @@ import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.DialogFragment;
@@ -48,6 +50,7 @@ public class MainActivity extends Activity {
 	private LinearLayout linear1;
 	private LinearLayout linear3;
 	private LinearLayout linear2;
+	private LinearLayout linear4;
 	private Spinner spinner1;
 	private SeekBar seekbar1;
 	private Button button5;
@@ -55,6 +58,9 @@ public class MainActivity extends Activity {
 	private Button button3;
 	private Button button2;
 	private Button button1;
+	private CheckBox fill;
+	private CheckBox stroke;
+	private CheckBox checkbox1;
 	
 	@Override
 	protected void onCreate(Bundle _savedInstanceState) {
@@ -68,6 +74,7 @@ public class MainActivity extends Activity {
 		linear1 = findViewById(R.id.linear1);
 		linear3 = findViewById(R.id.linear3);
 		linear2 = findViewById(R.id.linear2);
+		linear4 = findViewById(R.id.linear4);
 		spinner1 = findViewById(R.id.spinner1);
 		seekbar1 = findViewById(R.id.seekbar1);
 		button5 = findViewById(R.id.button5);
@@ -75,6 +82,9 @@ public class MainActivity extends Activity {
 		button3 = findViewById(R.id.button3);
 		button2 = findViewById(R.id.button2);
 		button1 = findViewById(R.id.button1);
+		fill = findViewById(R.id.fill);
+		stroke = findViewById(R.id.stroke);
+		checkbox1 = findViewById(R.id.checkbox1);
 		
 		spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
@@ -96,7 +106,12 @@ public class MainActivity extends Activity {
 								dv.setDrawType(DrawingView.TYPES.TRIANGLE1);
 							}
 							else {
-								dv.setDrawType(DrawingView.TYPES.TRIANGLE2);
+								if (_position == 4) {
+									dv.setDrawType(DrawingView.TYPES.TRIANGLE2);
+								}
+								else {
+									dv.setDrawType(DrawingView.TYPES.LINE);
+								}
 							}
 						}
 					}
@@ -205,23 +220,63 @@ public class MainActivity extends Activity {
 				dv.clear();
 			}
 		});
+		
+		fill.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton _param1, boolean _param2) {
+				final boolean _isChecked = _param2;
+				_updateStyle();
+			}
+		});
+		
+		stroke.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton _param1, boolean _param2) {
+				final boolean _isChecked = _param2;
+				_updateStyle();
+			}
+		});
+		
+		checkbox1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton _param1, boolean _param2) {
+				final boolean _isChecked = _param2;
+				dv.ShowHelper(_isChecked);
+			}
+		});
 	}
 	
 	private void initializeLogic() {
 		dv = new DrawingView(this);
 		linear1.addView(dv);
 		dv.setLayoutParams(new LinearLayout.LayoutParams((int) (ViewGroup.LayoutParams.MATCH_PARENT),(int) (ViewGroup.LayoutParams.MATCH_PARENT)));
-		dv.setBackgroundColor(0xFFCFD8DC);
 		typesL.add("PEN");
 		typesL.add("SQUARE");
 		typesL.add("CIRCLE");
 		typesL.add("TRIANGLE1");
 		typesL.add("TRIANGLE2");
+		typesL.add("LINE");
 		spinner1.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, typesL));
 	}
 	
 	public void _dd() {
-		
+	}
+	PointF calculateInterceptionPoint(Point s1, Point d1, Point s2, Point d2) {
+		    double sNumerator = s1.y * d1.x + s2.x * d1.y - s1.x * d1.y - s2.y * d1.x;
+		    double sDenominator = d2.y * d1.x - d2.x * d1.y;
+		    // parallel ... 0 or infinite points, or one of the vectors is 0|0
+		    if (sDenominator == 0) {
+			        return null;
+			    }
+		    double s = sNumerator / sDenominator;
+		    double t;
+		    if (d1.x != 0) {
+			        t = (s2.x + s * d2.x - s1.x) / d1.x;
+			    } else {
+			        t = (s2.y + s * d2.y - s1.y) / d1.y;
+			    }
+		    PointF i1 = new PointF((float)(s1.x + t * d1.x),(float)(s1.y + t * d1.y));
+		    return i1;
 	}
 	
 	
@@ -1200,6 +1255,26 @@ iniColor = "";
 			    }
 	}
 	{
+	}
+	
+	
+	public void _updateStyle() {
+		if (fill.isChecked() && stroke.isChecked()) {
+			dv.setStyle(DrawingView.STYLE.FILL_AND_STROKE);
+		}
+		else {
+			if (fill.isChecked()) {
+				dv.setStyle(DrawingView.STYLE.FILL);
+			}
+			else {
+				if (stroke.isChecked()) {
+					dv.setStyle(DrawingView.STYLE.STROKE);
+				}
+				else {
+					stroke.setChecked(true);
+				}
+			}
+		}
 	}
 	
 	
